@@ -12,11 +12,13 @@ class GetSpaceMediaFromDateUsecase
   GetSpaceMediaFromDateUsecase(this.repository);
 
   @override
-  Future<Either<Failure, SpaceMediaEntity>> call(DateTime date) async {
+  Future<Either<Failure, SpaceMediaEntity>> call(DateTime? date) async {
     // Validações - exemplo: formato de e-mail que tenha a ve com regra de negócio
     // Validações de api no data layer
     // Nesse exemplo verificar a data por exemplo
     // Chamar o repository
-    return await repository.getSpaceMediaFromDate(date);
+    return date != null
+        ? await repository.getSpaceMediaFromDate(date)
+        : Left(NullParamsFailure());
   }
 }

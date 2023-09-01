@@ -7,9 +7,10 @@ import 'package:nasa_clean_architecture/features/domain/entities/space_media.dar
 import 'package:nasa_clean_architecture/features/domain/repositories/space_media_repository.dart';
 import 'package:nasa_clean_architecture/features/domain/usecases/get_space_media_from_date_usecase.dart';
 
-class MockSpaceMediaRepository extends Mock implements ISpaceMediaRepository {}
+import '../../mocks/date_mock.dart';
+import '../../mocks/space_media_entity_mock.dart';
 
-// https://api.nasa.gov/planetary/apod?api_key=DEMO_KEY
+class MockSpaceMediaRepository extends Mock implements ISpaceMediaRepository {}
 
 void main() {
   late GetSpaceMediaFromDateUsecase usecase;
@@ -19,17 +20,6 @@ void main() {
     repository = MockSpaceMediaRepository();
     usecase = GetSpaceMediaFromDateUsecase(repository);
   });
-
-  const tSpaceMedia = SpaceMediaEntity(
-    description:
-        "Ringed planet Saturn will be at its 2023 opposition, opposite the Sun in Earth's skies, on August 27. ",
-    mediaType: "image",
-    title: "A Season of Saturn",
-    mediaUrl:
-        "https://apod.nasa.gov/apod/image/2308/SeasonSaturnapodacasely1024.jpg",
-  );
-
-  final tDate = DateTime(2021, 02, 02);
 
   test(
     'Should get space media entity for a given date from the repository',
@@ -63,6 +53,21 @@ void main() {
       expect(result, Left(ServerFailure()));
       // Verifica se o método foi chamado
       verify(() => repository.getSpaceMediaFromDate(tDate)).called(1);
+    },
+  );
+
+  test(
+    'Should return a NullParamsFailure when receives a null params',
+    () async {
+      // Arrange
+      // Act
+      final result = await usecase(null);
+
+      // Assert
+      // Espera que o resultado seja um Right de SpaceMedia
+      expect(result, Left(NullParamsFailure()));
+      // Verifica se o método foi chamado
+      verifyNever(() => repository.getSpaceMediaFromDate(tDate));
     },
   );
 }

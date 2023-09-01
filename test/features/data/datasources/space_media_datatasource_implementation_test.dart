@@ -3,6 +3,7 @@ import 'package:mocktail/mocktail.dart';
 
 import 'package:nasa_clean_architecture/core/http_client/http_client.dart';
 import 'package:nasa_clean_architecture/core/usecases/errors/exceptions.dart';
+import 'package:nasa_clean_architecture/core/utils/date_input_converter.dart';
 import 'package:nasa_clean_architecture/features/data/datasources/space_media_datasource.dart';
 import 'package:nasa_clean_architecture/features/data/datasources/space_media_datasource_implementation.dart';
 import 'package:nasa_clean_architecture/features/data/models/space_media_model.dart';
@@ -17,7 +18,8 @@ main() {
 
   setUp(() {
     client = HttpClientMocking();
-    datasource = NasaDatasourceImplementation(client: client);
+    datasource = SpaceMediaDatasouceImplementation(
+        client: client, converter: DateInputConverter());
   });
 
   final tDateTime = DateTime(2023, 08, 29);
